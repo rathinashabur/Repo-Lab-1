@@ -1,2 +1,2 @@
-release: python manage.py migrate
-web: gunicorn Repo-Lab-1.wsgi --log-file -
+release: python3 manage.py migrate
+web: gunicorn project_django.wsgi --log-file -

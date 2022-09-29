@@ -15,16 +15,12 @@ from django.urls import reverse
 # Create your views here.
 @login_required(login_url='/wishlist/login/')
 def show_wishlist(request):
-    print("kkkkkkk")
     data_barang_wishlist = BarangWishlist.objects.all()
-    #print(request.COOKIES)
     context = {
     'list_barang': data_barang_wishlist,
     'nama': 'Rathina Shabur',
     'last_login': request.COOKIES['last_login'],
 }
-    print("aaaaaaaaaaaaaaaaaaaaaa")
-    print(context)
     return render(request, "wishlist.html", context)
 
 def show_xml(request):

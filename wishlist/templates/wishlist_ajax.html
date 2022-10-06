@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+  </head>
+  <body>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand">Let's Start, {{nama}} </a>
+                <button><a class="btn btn-secondary" href="{% url 'wishlist:logout' %}">Logout</a></button>
+            </div>
+          </nav>
+
+        <h5>Nama: {{nama}}</h5>
+        
+        <table class="table">
+            <tr style="background-color: cornflowerblue; border-color: lightpink;">
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+            </tr>
+            {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
+            {% for barang in list_barang %}
+                <tr style = "background-color: lightblue; border-color: lightpink;">
+                    <th>{{barang.nama_barang}}</th>
+                    <th>{{barang.harga_barang}}</th>
+                    <th>{{barang.deskripsi}}</th>
+                </tr>
+            {% endfor %}
+        </table>
+        <h5>Sesi terakhir login: {{ last_login }}</h5>
+
+        <hr />
+  
+        <h4> New Wishlist </h4>
+        <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+            <td>Nama Barang: </td>
+            <td><input type="text" id="nama_barang" name="nama_barang" placeholder="Nama Barang" class="form-control"></td>
+            </tr>
+    
+            <tr>
+            <td>Harga Barang: </td>
+            <td><input type="number" id="harga_barang" name="harga_barang" placeholder="Harga Barang" class="form-control"></td>
+            </tr>
+    
+            <tr>
+            <td>Deskripsi: </td>
+            <td><textarea class="form-control" id="deskripsi" name="Deskripsi"></textarea></td>
+            </tr>
+    
+            <tr>
+            <td></td>
+            <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
+            </tr>
+        </table>
+        </form>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function func_1(event) {
+            event.preventDefault()
+            const barang_nama = $("#nama_barang").val()
+            const barang_harga = $("#harga_barang").val()
+            const deskripsi = $("#deskripsi").val()
+            const new_data = {
+                nama_barang: barang_nama,
+                harga_barang: barang_harga,
+                deskripsi,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+        }
+    
+        $.ajax({
+            type: 'POST',
+            url: '/wishlist/ajax/submit',
+            data: new_data, 
+            success: () => {
+                            alert("Success")
+                            fetchData()
+                        },
+            dataType: 'json'
+            });
+        }
+    
+        function func_2(new_data) {
+        const table = $("#table")
+        table.empty()
+        for (let i = 0; i < new_data.length; i++) {
+            table.append(`
+            <tr>
+                <td>${new_data[i].fields.nama_barang}</td>
+                <td>${new_data[i].fields.harga_barang}</td>
+                <td>${new_data[i].fields.deskripsi}</td>
+            </tr>
+            `)
+            }
+        }
+
+        function func_3() {
+        $.get("/wishlist/json", func_2)
+        }
+
+        $(document).ready(() => {
+            $("#newBtn").click(postNew)
+            fetchData()
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+{% endblock content %}
+
+<!--  https://stackoverflow.com/questions/60932743/bootstrap-cards-in-a-for-loop --> 

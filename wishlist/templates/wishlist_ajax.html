@@ -35,35 +35,35 @@
             {% endfor %}
         </table>
         <h5>Sesi terakhir login: {{ last_login }}</h5>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 
         <hr />
   
         <h4> New Wishlist </h4>
         <form method="POST" action="">
-        {% csrf_token %}
-        <table>
-            <tr>
-            <td>Nama Barang: </td>
-            <td><input type="text" id="nama_barang" name="nama_barang" placeholder="Nama Barang" class="form-control"></td>
-            </tr>
-    
-            <tr>
-            <td>Harga Barang: </td>
-            <td><input type="number" id="harga_barang" name="harga_barang" placeholder="Harga Barang" class="form-control"></td>
-            </tr>
-    
-            <tr>
-            <td>Deskripsi: </td>
-            <td><textarea class="form-control" id="deskripsi" name="Deskripsi"></textarea></td>
-            </tr>
-    
-            <tr>
-            <td></td>
-            <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
-            </tr>
-        </table>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Nama Barang: </td>
+                    <td><input type="text" id="nama_barang" name="nama_barang" placeholder="Nama Barang" class="form-control"></td>
+                </tr>
+            
+                <tr>
+                    <td>Harga Barang: </td>
+                    <td><input type="number" id="harga_barang" name="harga_barang" placeholder="Harga Barang" class="form-control"></td>
+                </tr>
+            
+                <tr>
+                    <td>Deskripsi: </td>
+                    <td><textarea class="form-control" id="deskripsi" name="Deskripsi"></textarea></td>
+                </tr>
+            
+                <tr>
+                    <td></td>
+                    <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
+                </tr>
+            </table>
         </form>
-    </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
@@ -81,40 +81,39 @@
     
         $.ajax({
             type: 'POST',
-            url: '/wishlist/ajax/submit',
+            url: 'ajax/submit',
             data: new_data, 
             success: () => {
                             alert("Success")
-                            fetchData()
+                            func_3()
                         },
             dataType: 'json'
             });
         }
     
         function func_2(new_data) {
-        const table = $("#table")
-        table.empty()
-        for (let i = 0; i < new_data.length; i++) {
-            table.append(`
-            <tr>
-                <td>${new_data[i].fields.nama_barang}</td>
-                <td>${new_data[i].fields.harga_barang}</td>
-                <td>${new_data[i].fields.deskripsi}</td>
-            </tr>
-            `)
+            const table = $("#table")
+            table.empty()
+            for (let i = 0; i < new_data.length; i++) {
+                table.append(`
+                <tr>
+                    <td>${new_data[i].fields.nama_barang}</td>
+                    <td>${new_data[i].fields.harga_barang}</td>
+                    <td>${new_data[i].fields.deskripsi}</td>
+                </tr>
+                `)
             }
         }
 
         function func_3() {
-        $.get("/wishlist/json", func_2)
+            $.get("/wishlist/json", func_2)
         }
 
         $(document).ready(() => {
-            $("#newBtn").click(postNew)
-            fetchData()
+            $("#newBtn").click(func_1)
+            func_1()
         })
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
   </body>
 </html>
 

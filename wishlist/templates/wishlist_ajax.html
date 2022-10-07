@@ -37,9 +37,9 @@
         <h5>Sesi terakhir login: {{ last_login }}</h5>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
 
-        <hr />
+        <hr>
   
-        <h4> New Wishlist </h4>
+        <h5> New Wishlist </h5>
         <form method="POST" action="">
             {% csrf_token %}
             <table>
@@ -60,14 +60,15 @@
             
                 <tr>
                     <td></td>
-                    <td><input class="btn btn-primary" type="submit" value="Submit" id="newBtn"></td>
+                    <td><input class="btn btn-primary" type="submit" value="Submit" id="new_button"></td>
                 </tr>
             </table>
         </form>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        function func_1(event) {
+
+        function to_post(event) {
             event.preventDefault()
             const barang_nama = $("#nama_barang").val()
             const barang_harga = $("#harga_barang").val()
@@ -77,21 +78,21 @@
                 harga_barang: barang_harga,
                 deskripsi,
                 csrfmiddlewaretoken: "{{ csrf_token }}"
+            }
+    
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'wishlist:new_wishlist'%}",
+                data: new_data, 
+                success: () => {
+                                alert("Wishlist Successfully Added!")
+                                fetch()
+                            },
+                dataType: 'json'
+                });
         }
     
-        $.ajax({
-            type: 'POST',
-            url: 'ajax/submit',
-            data: new_data, 
-            success: () => {
-                            alert("Success")
-                            func_3()
-                        },
-            dataType: 'json'
-            });
-        }
-    
-        function func_2(new_data) {
+        async function to_refresh(new_data) {
             const table = $("#table")
             table.empty()
             for (let i = 0; i < new_data.length; i++) {
@@ -105,18 +106,16 @@
             }
         }
 
-        function func_3() {
-            $.get("/wishlist/json", func_2)
+        function fetch() {
+            $.get("/wishlist/json", to_refresh)
         }
 
         $(document).ready(() => {
-            $("#newBtn").click(func_1)
-            func_1()
+            $("#new_button").click(to_post)
+            fetch()
         })
     </script>
   </body>
 </html>
 
 {% endblock content %}
-
-<!--  https://stackoverflow.com/questions/60932743/bootstrap-cards-in-a-for-loop --> 

@@ -90,8 +90,5 @@ def new_wishlist(request: HttpRequest):
             deskripsi = deskripsi,
         )
         new_wl.save()
-        return HttpResponse(
-            serializers.serialize("json", [new_wl]),
-            content_type="application/json",
-        )
+        return HttpResponse(serializers.serialize("json", [new_wl]), content_type="application/json")
     return HttpResponse("Invalid method", status_code=405)
